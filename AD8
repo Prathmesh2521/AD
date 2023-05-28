@@ -1,0 +1,96 @@
+Activity_main.xml code:
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="50dp"
+    android:layout_marginBottom="100dp"
+    android:gravity="center"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/editTextText2"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="100dp"
+        android:ems="10"
+        android:inputType="text"
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:text="Media Player"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="@string/play"
+        android:onClick="Play"
+        tools:ignore="UsingOnClickInXml" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="@string/pause"
+        android:onClick="Pause"
+        tools:ignore="UsingOnClickInXml" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="@string/stop"
+        android:onClick="Stop"
+        tools:ignore="UsingOnClickInXml" />
+</LinearLayout>
+
+
+
+
+MainActivity.java code:
+package com.example.exp8;
+import androidx.appcompat.app.AppCompatActivity;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+    MediaPlayer player;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void Play(View view) {
+        if(player==null){
+            player=MediaPlayer.create(this,R.raw.song);
+            player.setOnCompletionListener(mediaPlayer -> stopPlayer());
+        }
+        player.start();
+    }
+
+    public void Pause(View view) {
+        if(player!=null){
+            player.pause();
+        }
+    }
+    public void Stop(View view) {
+        stopPlayer();
+    }
+    private void stopPlayer(){
+        if(player!=null){
+            player.release();
+            player=null;
+            Toast.makeText(this, "Media Player Released", Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+
