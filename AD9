@@ -1,0 +1,132 @@
+Activity_main.xml code:
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/text"
+        android:hint="Enter A Text"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="288dp"
+        android:text="Save"
+        android:onClick="save"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:onClick="load"
+        android:text="Load" />
+
+</RelativeLayout>
+
+MainActivity.java code:
+
+package com.example.exp9_42442;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+
+
+  
+    public class MainActivity extends AppCompatActivity {
+    private static final String FILE_NAME="example.txt";
+    EditText editText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        editText=findViewById(R.id.text);
+    }
+
+    public void load(View view) {
+        String Text;
+        FileInputStream fis=null;
+       
+        try {
+            fis=openFileInput("FILE_NAME");
+            InputStreamReader inputStreamReader=new InputStreamReader(fis);
+            BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder=new StringBuilder();
+
+            while((Text=bufferedReader.readLine())!=null)
+                stringBuilder.append(Text).append("\n");
+            editText.setText(stringBuilder.toString());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+ 
+        finally {
+            if(fis!=null){
+                try {
+                    fis.close();
+                    fis=null;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    public void save(View view) {
+        String text=editText.getText().toString();
+        FileOutputStream fos=null;
+        try {
+            fos=openFileOutput("FILE_NAME",MODE_PRIVATE);
+            fos.write(text.getBytes());
+            editText.getText().clear();
+            Toast.makeText(this, "Saved to"+getFilesDir()+"/"+FILE_NAME, Toast.LENGTH_SHORT).show();
+        }  
+     catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
+        finally {
+            if(fos!=null){
+               
+
+
+           try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+    }
+
+}
